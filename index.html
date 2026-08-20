@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aishwarya Ramasethu</title>
+<meta name="description" content="AI Engineer at Prediction Guard. Safety evaluation, benchmarks, and inference infrastructure for regulated industries.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#E7EBE8;
+    --surface:#F5F8F5;
+    --ink:#121917;
+    --body:#2C3A35;
+    --muted:#65746E;
+    --rule:#C7D1CB;
+    --signal:#1F3A93;
+    --signal-soft:#D9DFF1;
+    --live:#B85C10;
+    --live-soft:#F0DFCB;
+
+    --f-display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+    --f-body:"IBM Plex Sans",system-ui,sans-serif;
+    --f-util:"IBM Plex Mono",ui-monospace,monospace;
+
+    --pad:clamp(1.25rem,5vw,4.5rem);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--body);
+    font-family:var(--f-body);
+    font-size:clamp(0.975rem,0.93rem + 0.22vw,1.0625rem);
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:1120px;margin:0 auto;padding:0 var(--pad)}
+
+  a{color:var(--signal);text-decoration:none;border-bottom:1px solid var(--signal-soft);transition:border-color .18s ease}
+  a:hover{border-bottom-color:var(--signal)}
+  :focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:2px}
+
+  /* ---------- masthead ---------- */
+  .mast{
+    display:flex;flex-wrap:wrap;gap:0.75rem 1.5rem;
+    align-items:baseline;justify-content:space-between;
+    padding:1.75rem 0 0;
+  }
+  .mast .who{
+    font-family:var(--f-util);font-size:0.75rem;letter-spacing:0.13em;
+    text-transform:uppercase;color:var(--ink);
+  }
+  .mast nav{display:flex;gap:1.1rem;flex-wrap:wrap}
+  .mast nav a{
+    font-family:var(--f-util);font-size:0.72rem;letter-spacing:0.08em;
+    color:var(--muted);border-bottom:none;
+  }
+  .mast nav a:hover{color:var(--signal)}
+
+  /* ---------- hero ---------- */
+  .hero{padding:clamp(3rem,9vw,6rem) 0 clamp(2.5rem,6vw,4rem)}
+  .hero h1{
+    font-family:var(--f-display);
+    font-weight:800;
+    font-size:clamp(2.35rem,1.1rem + 5.4vw,5.1rem);
+    line-height:0.98;
+    letter-spacing:-0.035em;
+    color:var(--ink);
+    margin:0 0 1.6rem;
+    max-width:16ch;
+    text-wrap:balance;
+  }
+  .hero h1 em{font-style:normal;color:var(--signal)}
+  .hero .lede{
+    max-width:60ch;font-size:1.06em;color:var(--body);margin:0 0 1.15rem;
+  }
+  .hero .lede.second{color:var(--muted);font-size:1em}
+  .contact{
+    display:flex;flex-wrap:wrap;gap:0.4rem 1.4rem;
+    margin-top:2rem;padding-top:1.1rem;border-top:1px solid var(--rule);
+    font-family:var(--f-util);font-size:0.76rem;letter-spacing:0.03em;
+  }
+  .contact a{border-bottom:none;color:var(--muted)}
+  .contact a:hover{color:var(--signal)}
+
+  /* ---------- section frame ---------- */
+  section{padding:clamp(2.75rem,6vw,4.5rem) 0;border-top:1px solid var(--rule)}
+  .eyebrow{
+    font-family:var(--f-util);font-size:0.7rem;letter-spacing:0.16em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 0.4rem;
+  }
+  h2{
+    font-family:var(--f-display);font-weight:600;
+    font-size:clamp(1.35rem,1.1rem + 0.9vw,1.9rem);
+    letter-spacing:-0.02em;color:var(--ink);margin:0 0 2.1rem;line-height:1.15;
+  }
+
+  /* ---------- span chart ---------- */
+  .chart{
+    background:var(--surface);
+    border:1px solid var(--rule);
+    padding:clamp(1rem,3vw,1.9rem);
+  }
+  .axis{
+    position:relative;height:1.35rem;margin-bottom:0.85rem;
+    border-bottom:1px solid var(--rule);
+  }
+  .axis span{
+    position:absolute;top:0;transform:translateX(-50%);
+    font-family:var(--f-util);font-size:0.68rem;color:var(--muted);
+    letter-spacing:0.05em;
+  }
+  .axis span:first-child{transform:none}
+  .axis span:last-child{transform:translateX(-100%)}
+
+  .lane{position:relative;height:2.35rem;margin-bottom:0.3rem}
+  .lane::before{
+    content:"";position:absolute;inset:auto 0 0 0;top:50%;
+    height:1px;background:var(--rule);opacity:.55;
+  }
+  .span{
+    position:absolute;top:50%;transform:translateY(-50%);
+    height:1.55rem;padding:0 0.6rem;
+    display:flex;align-items:center;
+    background:var(--signal-soft);
+    border:1px solid var(--signal);
+    border-radius:1px;
+    font-family:var(--f-util);font-size:0.7rem;letter-spacing:0.02em;
+    color:var(--signal);white-space:nowrap;overflow:hidden;
+    cursor:pointer;
+    transition:background .18s ease,color .18s ease;
+    transform-origin:left center;
+  }
+  .span:hover,.span.on{background:var(--signal);color:var(--surface)}
+  .span.live{border-color:var(--live);background:var(--live-soft);color:var(--live)}
+  .span.live:hover,.span.live.on{background:var(--live);color:var(--surface)}
+  .span .dot{
+    width:6px;height:6px;border-radius:50%;background:currentColor;
+    margin-left:0.5rem;flex:none;
+  }
+
+  .lanes-marks{margin-top:1.15rem;padding-top:0.9rem;border-top:1px solid var(--rule)}
+  .marklane{position:relative;height:2.05rem;display:flex;align-items:center}
+  .marklane .tag{
+    font-family:var(--f-util);font-size:0.66rem;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--muted);
+    position:absolute;left:0;top:-0.1rem;
+  }
+  .track{position:relative;width:100%;height:100%}
+  .marklane .track::before{
+    content:"";position:absolute;left:0;right:0;top:50%;height:1px;
+    background:var(--rule);
+  }
+  .mark{
+    position:absolute;top:50%;
+    width:11px;height:11px;margin:-5.5px 0 0 -5.5px;
+    background:var(--surface);border:1.5px solid var(--signal);
+    transform:rotate(45deg);
+    padding:0;cursor:pointer;
+    transition:background .18s ease;
+  }
+  .mark:hover,.mark.on{background:var(--signal)}
+  .mark.future{border-color:var(--live);border-style:dashed}
+  .mark.future:hover,.mark.future.on{background:var(--live)}
+
+  .readout{
+    margin-top:1.15rem;padding-top:0.85rem;border-top:1px solid var(--rule);
+    font-family:var(--f-util);font-size:0.73rem;color:var(--muted);
+    min-height:2.6em;line-height:1.5;
+  }
+  .readout b{color:var(--ink);font-weight:500}
+  .readout .hint{color:var(--muted);opacity:.75}
+
+  /* ---------- entry lists ---------- */
+  .entry{
+    display:grid;grid-template-columns:11rem 1fr;gap:0 2.5rem;
+    padding:1.9rem 0;border-top:1px solid var(--rule);
+    scroll-margin-top:1.5rem;
+  }
+  .entry:first-of-type{border-top:none;padding-top:0}
+  .entry.flash{background:linear-gradient(90deg,var(--signal-soft),transparent 60%)}
+  .when{
+    font-family:var(--f-util);font-size:0.73rem;letter-spacing:0.04em;
+    color:var(--muted);padding-top:0.35rem;
+  }
+  .when .now{color:var(--live)}
+  .entry h3{
+    font-family:var(--f-display);font-weight:600;font-size:1.22rem;
+    letter-spacing:-0.015em;color:var(--ink);margin:0 0 0.15rem;line-height:1.25;
+  }
+  .org{
+    font-family:var(--f-util);font-size:0.75rem;color:var(--muted);
+    margin:0 0 0.9rem;letter-spacing:0.02em;
+  }
+  .entry ul{margin:0;padding-left:1.05rem}
+  .entry li{margin-bottom:0.55rem}
+  .entry li:last-child{margin-bottom:0}
+  .entry p.note{margin:0}
+
+  .venue{
+    font-family:var(--f-util);font-size:0.73rem;color:var(--muted);
+    margin:0.55rem 0 0;
+  }
+
+  .next{
+    border:1px solid var(--live);background:var(--surface);
+    padding:clamp(1.25rem,3.5vw,2.1rem);
+    scroll-margin-top:1.5rem;
+  }
+  .next + .next{margin-top:1.15rem}
+  .next.flash{background:linear-gradient(90deg,var(--live-soft),var(--surface) 65%)}
+  .next .flag{
+    display:inline-flex;align-items:center;gap:0.5rem;
+    font-family:var(--f-util);font-size:0.68rem;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--live);margin-bottom:0.9rem;
+  }
+  .next .flag i{width:6px;height:6px;border-radius:50%;background:var(--live);display:block}
+  .next h3{
+    font-family:var(--f-display);font-weight:600;
+    font-size:clamp(1.3rem,1.05rem + 0.9vw,1.75rem);
+    letter-spacing:-0.02em;color:var(--ink);margin:0 0 0.6rem;line-height:1.2;
+  }
+  .next p{margin:0 0 0.5rem;max-width:62ch}
+
+  footer{
+    border-top:1px solid var(--rule);padding:2.25rem 0 3rem;
+    font-family:var(--f-util);font-size:0.72rem;color:var(--muted);
+    display:flex;flex-wrap:wrap;gap:0.5rem 1.5rem;justify-content:space-between;
+  }
+  footer a{border-bottom:none;color:var(--muted)}
+  footer a:hover{color:var(--signal)}
+
+  /* ---------- motion ---------- */
+  .span,.mark{animation:none}
+  .anim .span{transform:translateY(-50%) scaleX(0);animation:draw .62s cubic-bezier(.2,.8,.3,1) forwards}
+  .anim .mark{opacity:0;animation:pop .4s ease forwards}
+  @keyframes draw{to{transform:translateY(-50%) scaleX(1)}}
+  @keyframes pop{to{opacity:1}}
+  .anim .span.live .dot{animation:pulse 2.2s ease-in-out infinite 1.2s}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  @media (prefers-reduced-motion:reduce){
+    .anim .span{transform:translateY(-50%) scaleX(1);animation:none}
+    .anim .mark{opacity:1;animation:none}
+    .anim .span.live .dot{animation:none}
+    html{scroll-behavior:auto}
+  }
+  html{scroll-behavior:smooth}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:760px){
+    .entry{grid-template-columns:1fr;gap:0.5rem}
+    .when{padding-top:0}
+    .span{font-size:0.63rem;padding:0 0.4rem}
+    .marklane .tag{position:static;margin-right:0.75rem;flex:none}
+    .marklane{gap:0}
+    .mark{width:9px;height:9px;margin:-4.5px 0 0 -4.5px}
+  }
+  @media (max-width:520px){
+    .span{font-size:0;padding:0}
+    .span .dot{margin-left:0}
+    .readout{min-height:3.4em}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="who">Aishwarya Ramasethu</div>
+    <nav>
+      <a href="#timeline">Timeline</a>
+      <a href="#experience">Experience</a>
+      <a href="#publications">Publications</a>
+      <a href="#next">Upcoming</a>
+      <a href="#talks">Past talks</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Measuring whether AI systems <em>actually</em> work.</h1>
+    <p class="lede">AI Engineer at Prediction Guard, building safety evaluations, benchmarks, and inference infrastructure for customers in healthcare, finance, and legal.</p>
+    <p class="lede second">Eight years in ML, the last three on the deployment side of LLMs: safety products serving a 2.8M+ request production API, benchmarks across 10+ models and six behavioral categories, and inference measurements spanning Intel Gaudi, GPUs, and AI PCs. My research sits in the same place as the work: a NeurIPS paper on the ways benchmarks mislead, and a JMLR paper on optimal noise for f-differential privacy that shipped into OpenDP.</p>
+    <div class="contact">
+      <a href="mailto:aishwarya.ramasethu@gmail.com">aishwarya.ramasethu@gmail.com</a>
+      <a href="https://github.com/aramasethu">github.com/aramasethu</a>
+      <a href="https://linkedin.com/in/aishwarya-ramasethu">linkedin.com/in/aishwarya-ramasethu</a>
+      <span>Lafayette, Indiana</span>
+    </div>
+  </div>
+
+  <!-- ============ TIMELINE ============ -->
+  <section id="timeline">
+    <p class="eyebrow">2017 &rarr; 2026</p>
+    <h2>Ten years on one axis</h2>
+
+    <div class="chart" id="chart">
+      <div class="axis">
+        <span style="left:0%">2017</span>
+        <span style="left:30%">2020</span>
+        <span style="left:60%">2023</span>
+        <span style="left:100%">2026</span>
+      </div>
+
+      <div class="lane">
+        <button class="span" data-target="quantium" data-label="Data Scientist, Quantium"
+                data-meta="Jul 2017 &ndash; Nov 2019 &middot; retail ML, hierarchical clustering and XGBoost on large transaction datasets"
+                style="left:5%;width:23.3%;animation-delay:.05s">Quantium</button>
+      </div>
+      <div class="lane">
+        <button class="span" data-target="porter" data-label="Senior Data Scientist, Porter"
+                data-meta="Dec 2019 &ndash; Aug 2021 &middot; A/B experiments, real-time monitoring, ETL on Redshift"
+                style="left:29.2%;width:16.7%;animation-delay:.14s">Porter</button>
+      </div>
+      <div class="lane">
+        <button class="span" data-target="purdue" data-label="Researcher, Purdue University"
+                data-meta="Nov 2021 &ndash; Aug 2023 &middot; 15+ applied projects in statistical modeling, simulation, experimental design"
+                style="left:48.3%;width:17.5%;animation-delay:.23s">Purdue</button>
+      </div>
+      <div class="lane">
+        <button class="span live" data-target="pg" data-label="AI Engineer, Prediction Guard"
+                data-meta="Sept 2023 &ndash; present &middot; still running: safety evaluation, agent instrumentation, inference benchmarking"
+                style="left:66.7%;width:29.2%;animation-delay:.32s">Prediction Guard <i class="dot"></i></button>
+      </div>
+
+      <div class="lanes-marks">
+        <div class="marklane">
+          <span class="tag">Papers</span>
+          <div class="track" style="padding-left:5.5rem">
+            <button class="mark" data-target="pub-jmlr" data-label="Optimizing Noise for f-Differential Privacy"
+                    data-meta="JMLR 25, 2024" style="left:74.2%;animation-delay:.5s"></button>
+            <button class="mark" data-target="pub-benchrisk" data-label="BenchRisk: risk management for benchmark failure modes"
+                    data-meta="NeurIPS 2025, Datasets &amp; Benchmarks" style="left:89.2%;animation-delay:.56s"></button>
+            <button class="mark" data-target="pub-loresmt" data-label="Can linguistically related languages guide LLM translation?"
+                    data-meta="LoResMT Workshop, EACL 2026" style="left:91.7%;animation-delay:.62s"></button>
+          </div>
+        </div>
+        <div class="marklane">
+          <span class="tag">Talks</span>
+          <div class="track" style="padding-left:5.5rem">
+            <button class="mark" data-target="talk-dp" data-label="Applying Differential Privacy to LLM Prompts"
+                    data-meta="MLOps Community, Sept 2024" style="left:76.7%;animation-delay:.68s"></button>
+            <button class="mark" data-target="talk-flower" data-label="Federated Learning with DP Synthetic Data"
+                    data-meta="Flower AI Summit, London, Mar 2025" style="left:81.7%;animation-delay:.74s"></button>
+            <button class="mark" data-target="talk-openx" data-label="Securing LLM Inference Pipelines"
+                    data-meta="OpenXData, May 2025" style="left:83.3%;animation-delay:.8s"></button>
+            <button class="mark" data-target="talk-elevate" data-label="AI Safety and Infrastructure in Regulated Industries"
+                    data-meta="Grand Farm, Fargo ND, Jun 2025" style="left:84.2%;animation-delay:.86s"></button>
+            <button class="mark future" data-target="infosec-talk" data-label="Can leaderboards predict production safety?"
+                    data-meta="InfoSec World 2026, Orlando &middot; upcoming" style="left:96.4%;animation-delay:.92s"></button>
+            <button class="mark future" data-target="pytorch-poster" data-label="Serving Interpretability Probes on Open Models"
+                    data-meta="PyTorch Conference North America 2026, San Jose &middot; what activation access costs in a fast serving engine" style="left:98.8%;animation-delay:.98s"></button>
+          </div>
+        </div>
+      </div>
+
+      <p class="readout" id="readout"><span class="hint">Hover or tap any bar or marker for detail. Everything below 2023 is one job at a time; everything after is the same three years, compressed.</span></p>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience">
+    <p class="eyebrow">Experience</p>
+    <h2>Where the bars come from</h2>
+
+    <div class="entry" id="pg">
+      <div class="when">Sept 2023 &ndash; <span class="now">present</span></div>
+      <div>
+        <h3>AI Engineer, Prediction Guard</h3>
+        <p class="note">Safety evaluation and benchmarking for LLMs and coding agents, plus inference measurement across Gaudi, GPUs, and AI PCs. Shipped prompt injection detection, PII masking, and toxicity checks into a 2.8M+ request production API.</p>
+      </div>
+    </div>
+
+    <div class="entry" id="purdue">
+      <div class="when">Nov 2021 &ndash; Aug 2023</div>
+      <div>
+        <h3>Researcher, Purdue University</h3>
+        <p class="note">Applied statistics across 15+ projects: modeling, simulation, experimental design. Where the differential privacy work started.</p>
+      </div>
+    </div>
+
+    <div class="entry" id="porter">
+      <div class="when">Dec 2019 &ndash; Aug 2021</div>
+      <div>
+        <h3>Senior Data Scientist, Porter</h3>
+        <p class="note">A/B experiments and real-time monitoring for a logistics marketplace, plus ETL on Redshift.</p>
+      </div>
+    </div>
+
+    <div class="entry" id="quantium">
+      <div class="when">Jul 2017 &ndash; Nov 2019</div>
+      <div>
+        <h3>Data Scientist, Quantium</h3>
+        <p class="note">Clustering and gradient boosting on large retail transaction datasets.</p>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="when">Education</div>
+      <div>
+        <h3>MS Statistics, Purdue University</h3>
+        <p class="note">MS Quantitative Finance, Madras School of Economics</p>
+        <p class="venue"><a href="resume.pdf">Full resume (PDF)</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PUBLICATIONS ============ -->
+  <section id="publications">
+    <p class="eyebrow">Publications</p>
+    <h2>Peer-reviewed work</h2>
+
+    <div class="entry" id="pub-loresmt">
+      <div class="when">EACL 2026</div>
+      <div>
+        <h3>Can Linguistically Related Languages Guide LLM Translation in Low-Resource Settings?</h3>
+        <p class="org">A. Ramasethu et al. &middot; LoResMT Workshop</p>
+        <p class="note">Whether typological relatedness between languages is a usable signal for improving translation when training data is scarce.</p>
+      </div>
+    </div>
+
+    <div class="entry" id="pub-benchrisk">
+      <div class="when">NeurIPS 2025</div>
+      <div>
+        <h3>Risk Management for Mitigating Benchmark Failure Modes: BenchRisk</h3>
+        <p class="org">S. McGregor et al. &middot; Datasets &amp; Benchmarks Track, poster</p>
+        <p class="note">A taxonomy of the ways benchmarks mislead the people who rely on them, covering 26 benchmarks and 57 failure modes across five dimensions, with mitigations for each.</p>
+      </div>
+    </div>
+
+    <div class="entry" id="pub-jmlr">
+      <div class="when">JMLR 2024</div>
+      <div>
+        <h3>Optimizing Noise for f-Differential Privacy via Anti-Concentration and Stochastic Dominance</h3>
+        <p class="org">J. Awan and A. Ramasethu &middot; Journal of Machine Learning Research, vol. 25</p>
+        <p class="note">Canonical noise distributions for f-differential privacy. The mechanism is now part of the <a href="https://github.com/opendp/opendp/pull/1126">OpenDP core library</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ UPCOMING ============ -->
+  <section id="next">
+    <p class="eyebrow">Upcoming</p>
+    <h2>Two talks, eight days apart</h2>
+
+    <div class="next" id="infosec-talk">
+      <span class="flag"><i></i> October 12, 2026</span>
+      <h3>Can leaderboards predict production safety?</h3>
+      <p><strong>InfoSec World 2026</strong>, Gaylord Palms, Orlando.</p>
+      <p>Capability is roughly a property of a model. Safety is a property of a system in its deployment context. That gap is why a leaderboard position cannot tell you whether a model is safe for your use case, and what to build internally instead.</p>
+    </div>
+
+    <div class="next" id="pytorch-poster">
+      <span class="flag"><i></i> October 20&ndash;21, 2026</span>
+      <h3>Serving Interpretability Probes on Open Models</h3>
+      <p><strong>PyTorch Conference North America 2026</strong>, San Jose. Poster, Community Expo.</p>
+      <p>Linear probes on the residual stream are cheap safety tooling, because the activations they read are already computed in the forward pass. Getting those activations out of a fast inference engine is the hard part: continuous batching, paged attention, CUDA graphs, tensor parallelism, and quantization each hide the internals a probe needs. I built an end-to-end probe on a small open model and measured the cost. Emitting hidden states and scoring on-device are free; reading each token's activation off-device in the decode loop costs about 24% of throughput. The poster walks through the measurement, locates the residual stream in the vLLM and SGLang forward paths, and outlines what per-layer, per-request activation access would take.</p>
+      <p class="venue"><a href="https://events.linuxfoundation.org/pytorch-conference-north-america/program/schedule-posters/">Poster schedule</a></p>
+    </div>
+  </section>
+
+  <!-- ============ PAST TALKS ============ -->
+  <section id="talks">
+    <p class="eyebrow">Previously</p>
+    <h2>Past talks</h2>
+
+    <div class="entry" id="talk-elevate">
+      <div class="when">Jun 2025</div>
+      <div>
+        <h3>AI Safety and Infrastructure in Regulated Industries</h3>
+        <p class="org">Elevate AI &amp; AgTech Conference, Grand Farm</p>
+        <p class="note">How open source AI infrastructure can be deployed safely in regulated environments without giving up performance.</p>
+        <p class="venue">Fargo, ND &middot; <a href="https://grandfarm.com/elevate/">grandfarm.com/elevate</a></p>
+      </div>
+    </div>
+
+    <div class="entry" id="talk-openx">
+      <div class="when">May 2025</div>
+      <div>
+        <h3>Securing LLM Inference Pipelines</h3>
+        <p class="org">OpenXData, MLOps Community</p>
+        <p class="note">A demo-led walkthrough of building secure inference pipelines from open source components, safety checks, and evaluation workflows.</p>
+        <p class="venue">Virtual &middot; <a href="https://www.onehouse.ai/openxdata/system-level-security-for-enterprise-ai-pipelines">watch</a></p>
+      </div>
+    </div>
+
+    <div class="entry" id="talk-flower">
+      <div class="when">Mar 2025</div>
+      <div>
+        <h3>Federated Learning with Differentially Private Synthetic Data</h3>
+        <p class="org">Flower AI Summit</p>
+        <p class="note">Deploying federated learning pipelines with open source tooling, focused on the tradeoffs that show up in real deployments.</p>
+        <p class="venue">London, UK &middot; <a href="https://flower.ai/summit/">flower.ai/summit</a></p>
+      </div>
+    </div>
+
+    <div class="entry" id="talk-dp">
+      <div class="when">Sept 2024</div>
+      <div>
+        <h3>Applying Differential Privacy to LLM Prompts While Maintaining Accuracy</h3>
+        <p class="org">Data Engineering for AI/ML Conference, MLOps Community</p>
+        <p class="note">Privacy-preserving prompt techniques, translated from the statistics into something practitioners can apply.</p>
+        <p class="venue">Virtual &middot; <a href="https://home.mlops.community/public/videos/applying-differential-privacy-dp-to-llm-prompts-while-maintaining-accuracy-aishwarya-ramasethu-de4ai-2024-09-18">watch</a></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Aishwarya Ramasethu &middot; Lafayette, Indiana</span>
+    <span>
+      <a href="mailto:aishwarya.ramasethu@gmail.com">Email</a> &nbsp;
+      <a href="https://github.com/aramasethu">GitHub</a> &nbsp;
+      <a href="https://linkedin.com/in/aishwarya-ramasethu">LinkedIn</a>
+    </span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var chart = document.getElementById('chart');
+  var readout = document.getElementById('readout');
+  var defaultHTML = readout.innerHTML;
+  var items = chart.querySelectorAll('.span,.mark');
+
+  document.body.classList.add('anim');
+
+  function show(el){
+    items.forEach(function(i){ i.classList.remove('on'); });
+    el.classList.add('on');
+    readout.innerHTML = '<b>' + el.dataset.label + '</b><br>' + el.dataset.meta;
+  }
+  function clear(){
+    items.forEach(function(i){ i.classList.remove('on'); });
+    readout.innerHTML = defaultHTML;
+  }
+
+  items.forEach(function(el){
+    el.setAttribute('aria-label', el.dataset.label);
+    el.addEventListener('mouseenter', function(){ show(el); });
+    el.addEventListener('focus', function(){ show(el); });
+    el.addEventListener('click', function(){
+      var t = document.getElementById(el.dataset.target);
+      if(!t) return;
+      t.scrollIntoView({block:'start'});
+      t.classList.add('flash');
+      setTimeout(function(){ t.classList.remove('flash'); }, 1400);
+    });
+  });
+
+  chart.addEventListener('mouseleave', clear);
+})();
+</script>
+
+</body>
+</html>
