@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leaderboards vs Production Safety</title>
+<meta name="description" content="Slides, research and practical tips from the InfoSec World 2026 talk 'Can Leaderboards Predict Production Safety?'">
+<style>
+  :root {
+    --bg: #080749; --panel: #12116a; --ink: #ffffff; --ink2: #c9cceb; --muted: #9ea3d6;
+    --blue: #2ca8fb; --amber: #ffb547; --aqua: #00f8b7; --line: #2a2a6e;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f6f7fc; --panel: #ffffff; --ink: #0d0c3d; --ink2: #3a3d6b; --muted: #5d6190;
+      --blue: #0b74c4; --amber: #a55f00; --aqua: #007a5a; --line: #dfe1f2;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
+  .eyebrow { color: var(--blue); font-weight: 600; letter-spacing: .04em; font-size: 14px; text-transform: uppercase; }
+  h1 { font-size: clamp(30px, 6vw, 44px); line-height: 1.15; margin: 8px 0 12px; }
+  .by { color: var(--ink2); margin: 0 0 32px; }
+  h2 { font-size: 22px; margin: 44px 0 14px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+  a.card { display: block; background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+           padding: 18px; color: var(--ink); text-decoration: none; transition: border-color .15s; }
+  a.card:hover, a.card:focus-visible { border-color: var(--blue); outline: none; }
+  a.card strong { display: block; font-size: 17px; margin-bottom: 4px; }
+  a.card span { color: var(--muted); font-size: 15px; }
+  ol.tips { padding-left: 0; list-style: none; counter-reset: t; margin: 0; }
+  ol.tips li { counter-increment: t; position: relative; padding: 14px 0 14px 48px; border-bottom: 1px solid var(--line); }
+  ol.tips li::before { content: counter(t); position: absolute; left: 0; top: 14px; width: 32px; height: 32px;
+                       border-radius: 50%; background: var(--amber); color: #080749; font-weight: 700;
+                       display: grid; place-items: center; font-size: 15px; }
+  ol.tips b { display: block; }
+  ol.tips span { color: var(--ink2); font-size: 15px; }
+  .cta { margin-top: 44px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+  .cta p { margin: 0 0 16px; color: var(--ink2); }
+  .btn { display: inline-block; background: var(--aqua); color: #080749; font-weight: 700; padding: 12px 20px;
+         border-radius: 10px; text-decoration: none; }
+  .btn2 { background: transparent; color: var(--ink); border: 1px solid var(--aqua); margin-left: 8px; }
+  @media (max-width: 480px) { .btn { display: block; text-align: center; } .btn2 { margin: 10px 0 0; } }
+  footer { margin-top: 48px; color: var(--muted); font-size: 14px; }
+  footer a { color: var(--ink2); }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">InfoSec World 2026 · Oct 13</div>
+  <h1>Can Leaderboards Predict Production Safety?</h1>
+  <p class="by">Aishwarya Ramasethu, AI Engineer, Prediction Guard</p>
+
+  <h2>Talk materials</h2>
+  <div class="cards">
+    <a class="card" target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1r-AleJnmChBlM6tU3qJCxgwY4L5rBhiz/view"><strong>Slides</strong><span>The full deck from the session</span></a>
+    <a class="card" target="_blank" rel="noopener" href="https://arxiv.org/abs/2510.21460"><strong>BenchRisk paper</strong><span>NeurIPS 2025 · 26 benchmarks, 57 failure modes</span></a>
+    <a class="card" target="_blank" rel="noopener" href="https://github.com/BenchRisk/BenchRisk"><strong>BenchRisk on GitHub</strong><span>Failure modes and mitigations</span></a>
+    <a class="card" target="_blank" rel="noopener" href="https://arxiv.org/abs/2411.00640"><strong>Adding Error Bars to Evals</strong><span>Miller, 2024 · how many test cases you need</span></a>
+  </div>
+
+  <h2>Pro tips for evaluating models in your environment</h2>
+  <ol class="tips">
+    <li><b>Evaluate in realistic production conditions</b><span>Your data, your prompts, your tools.</span></li>
+    <li><b>Evals are very sensitive to the harness</b><span>Same answers, different scoring: a model moved up to 24 places.</span></li>
+    <li><b>Be wary of small gains</b><span>With 100 test cases, even a 10-point gain can be noise. You need about 20 points to trust it.</span></li>
+    <li><b>Smaller can be better</b><span>Pick on task fit, not size.</span></li>
+    <li><b>Test the exact version you deploy</b><span>Quantized versions and different serving setups can behave differently on safety.</span></li>
+    <li><b>Check leaderboards for production failure modes</b><span>Use the BenchRisk questions. "Unknown" doesn't mean fine.</span></li>
+  </ol>
+
+  <div class="cta">
+    <h2 style="margin-top:0">Evaluate models in your own environment</h2>
+    <p>Prediction Guard deploys control planes inside customer environments to secure agentic workflows, including evaluating the models in your AI supply chain.</p>
+    <a class="btn" href="https://predictionguard.com/get-started">Book a demo</a>
+    <a class="btn btn2" href="https://meetings.hubspot.com/catherine-katie/meet-with-us-at-infosec-world">Meet us at InfoSec World</a>
+  </div>
+
+  <footer>
+    <a href="https://predictionguard.com/">predictionguard.com</a>
+  </footer>
+</main>
+</body>
+</html>
